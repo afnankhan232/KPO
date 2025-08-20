@@ -1,27 +1,72 @@
 {% extends 'dashboard/base.html' %}
 {% block title %}BPOs | KPO Dashboard{% endblock %}
 {% block content %}
-<h1>BPOs</h1>
-<a href="?export=csv" style="float:right; margin-bottom:10px;">Export to CSV</a>
-<form method="get" style="margin-bottom: 18px;">
-    <input type="text" name="q" value="{{ query }}" placeholder="Search BPOs by name..." style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc;">
-    <button type="submit">Search</button>
+
+<h1 style="margin-bottom: 20px; font-size: 24px; font-weight: 600; color: #333;">BPOs</h1>
+
+<a href="?export=csv" 
+   style="float: right; padding: 6px 12px; border-radius: 6px; background: #007bff; color: white; text-decoration: none; font-size: 14px; margin-bottom: 15px;">
+   Export to CSV
+</a>
+
+<form method="get" style="margin-bottom: 20px; display: flex; gap: 10px;">
+    <input type="text" 
+           name="q" 
+           value="{{ query }}" 
+           placeholder="Search BPOs by name..." 
+           style="flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px;">
+    <button type="submit" 
+            style="padding: 8px 14px; border-radius: 6px; border: none; background: #28a745; color: white; font-size: 14px; cursor: pointer;">
+        Search
+    </button>
 </form>
-<table>
-    <tr><th>Name</th><th>Description</th></tr>
-    {% for bpo in bpos %}
-    <tr>
-        <td><a href="/bpos/{{ bpo.id }}/">{{ bpo.name }}</a></td>
-        <td>{{ bpo.description|truncatewords:15 }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="2">No BPOs found.</td></tr>
-    {% endfor %}
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+    <thead>
+        <tr style="background: #f8f9fa; text-align: left;">
+            <th style="padding: 10px; border-bottom: 2px solid #dee2e6;">Name</th>
+            <th style="padding: 10px; border-bottom: 2px solid #dee2e6;">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bpo in bpos %}
+        <tr style="border-bottom: 1px solid #e9ecef;">
+            <td style="padding: 10px;">
+                <a href="/bpos/{{ bpo.id }}/" style="color: #007bff; text-decoration: none; font-weight: 500;">
+                    {{ bpo.name }}
+                </a>
+            </td>
+            <td style="padding: 10px; color: #555;">
+                {{ bpo.description|truncatewords:15 }}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2" style="padding: 12px; text-align: center; color: #888;">No BPOs found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
-<h2>Add BPO</h2>
-<form method="post">
+
+<h2 style="margin-top: 30px; font-size: 20px; font-weight: 600; color: #333;">Add BPO</h2>
+
+<form method="post" style="margin-top: 15px; max-width: 500px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #fdfdfd;">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add BPO</button>
+    
+    <div style="margin-bottom: 15px;">
+        <label for="id_name" style="display: block; margin-bottom: 6px; font-weight: 500; color: #444;">Name</label>
+        {{ form.name }}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="id_description" style="display: block; margin-bottom: 6px; font-weight: 500; color: #444;">Description</label>
+        {{ form.description }}
+    </div>
+
+    <button type="submit" 
+            style="padding: 10px 16px; border-radius: 6px; border: none; background: #007bff; color: white; font-size: 15px; cursor: pointer;">
+        Add BPO
+    </button>
 </form>
+
 {% endblock %}

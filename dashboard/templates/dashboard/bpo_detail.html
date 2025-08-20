@@ -1,20 +1,52 @@
 {% extends 'dashboard/base.html' %}
+
 {% block title %}BPO Details | KPO Dashboard{% endblock %}
+
 {% block content %}
-<h1>{{ bpo.name }}</h1>
-<p>{{ bpo.description }}</p>
-<h2>Projects under this BPO</h2>
-<table>
-    <tr><th>Name</th><th>Client</th><th>Status</th></tr>
-    {% for project in projects %}
-    <tr>
-        <td><a href="/projects/{{ project.id }}/">{{ project.name }}</a></td>
-        <td>{{ project.client }}</td>
-        <td>{{ project.status }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="3">No projects found for this BPO.</td></tr>
-    {% endfor %}
-</table>
-<a href="/bpos/">&larr; Back to BPOs</a>
+<div style="max-width: 900px; margin: 0 auto;">
+
+    <!-- BPO Details -->
+    <div style="margin-bottom: 25px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9;">
+        <h1 style="margin-bottom: 10px; font-size: 28px; color: #2c3e50;">{{ bpo.name }}</h1>
+        <p style="font-size: 16px; line-height: 1.6; color: #555;">{{ bpo.description }}</p>
+    </div>
+
+    <!-- Projects Section -->
+    <h2 style="margin-bottom: 15px; font-size: 22px; color: #2c3e50;">Projects under this BPO</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+        <thead>
+            <tr style="background: #2c3e50; color: #fff;">
+                <th style="text-align: left; padding: 12px;">Name</th>
+                <th style="text-align: left; padding: 12px;">Client</th>
+                <th style="text-align: left; padding: 12px;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 10px;">
+                    <a href="/projects/{{ project.id }}/" style="color: #2980b9; text-decoration: none; font-weight: 500;">
+                        {{ project.name }}
+                    </a>
+                </td>
+                <td style="padding: 10px; color: #555;">{{ project.client }}</td>
+                <td style="padding: 10px; color: {% if project.status == 'Completed' %}green{% elif project.status == 'In Progress' %}#e67e22{% else %}#c0392b{% endif %}; font-weight: 500;">
+                    {{ project.status }}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" style="text-align: center; padding: 12px; color: #888;">No projects found for this BPO.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Back Button -->
+    <a href="/bpos/" style="display: inline-block; padding: 10px 18px; background: #2980b9; color: #fff; border-radius: 6px; text-decoration: none; font-size: 14px;">
+        &larr; Back to BPOs
+    </a>
+
+</div>
 {% endblock %}
