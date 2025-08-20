@@ -1,0 +1,11 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Edit BPO | KPO Dashboard{% endblock %}
+{% block content %}
+<h1>Edit BPO</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+    <a href="/bpos/">Cancel</a>
+</form>
+{% endblock %}

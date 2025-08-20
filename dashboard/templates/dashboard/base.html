@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}KPO Dashboard{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <style id="theme-style">
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background: linear-gradient(120deg, #232526 0%, #414345 100%);
+            color: #e0e0e0;
+        }
+        body.dark-mode .container {
+            background: rgba(30,30,30,0.98);
+            color: #e0e0e0;
+        }
+        body.dark-mode .header, body.dark-mode .footer {
+            background: linear-gradient(90deg, #232526 0%, #414345 100%);
+            color: #fff;
+        }
+        body.dark-mode table {
+            background: #232526;
+            color: #e0e0e0;
+        }
+        body.dark-mode th {
+            background: #333;
+            color: #fff;
+        }
+        body.dark-mode tr:nth-child(even) {
+            background: #2c2c2c;
+        }
+        .header {
+            background: linear-gradient(90deg, #4f8cff 0%, #38e8fa 100%);
+            color: #fff;
+            padding: 32px 40px 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom-left-radius: 32px;
+            border-bottom-right-radius: 32px;
+            box-shadow: 0 4px 24px #0002;
+            flex-wrap: wrap;
+        }
+        .brand {
+            font-size: 2.2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px #0002;
+        }
+        .nav {
+            display: flex;
+            gap: 24px;
+        }
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 8px 18px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .nav a:hover, .nav a.active {
+            background: #38e8fa55;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 48px auto 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            box-shadow: 0 4px 32px #0001;
+            padding: 40px 32px 32px 32px;
+        }
+        @media (max-width: 800px) {
+            .container {
+                padding: 18px 4vw 18px 4vw;
+            }
+            .header {
+                flex-direction: column;
+                padding: 24px 4vw 12px 4vw;
+                text-align: center;
+            }
+            .nav {
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
+            }
+        }
+        @media (max-width: 500px) {
+            .container {
+                padding: 8px 2vw 8px 2vw;
+            }
+            .header {
+                padding: 12px 2vw 8px 2vw;
+            }
+            .brand {
+                font-size: 1.2rem;
+            }
+            .footer {
+                font-size: 0.9rem;
+                padding: 12px 0 10px 0;
+            }
+            table, th, td {
+                font-size: 0.95rem;
+            }
+        }
+        .footer {
+            background: linear-gradient(90deg, #4f8cff 0%, #38e8fa 100%);
+            color: #fff;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-top: 48px;
+            padding: 24px 0 20px 0;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            box-shadow: 0 -4px 24px #0002;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="header">
+        <div class="brand">
+            <img src="{% static 'dashboard/logo.jpg' %}" alt="" style="height:40px;vertical-align:middle;margin-right:12px;">
+            Bandy & Moot
+        </div>
+        <nav class="nav">
+            <a href="/" class="{% if request.path == '/' %}active{% endif %}">Dashboard</a>
+            <a href="/projects/" class="{% if '/projects' in request.path %}active{% endif %}">Projects</a>
+            <a href="/teams/" class="{% if '/teams' in request.path %}active{% endif %}">Teams</a>
+            <a href="/kpis/" class="{% if '/kpis' in request.path %}active{% endif %}">KPIs</a>
+            <a href="/bpos/" class="{% if '/bpos' in request.path %}active{% endif %}">BPOs</a>
+            <a href="/about/" class="{% if request.path == '/about/' %}active{% endif %}">About</a>
+        </nav>
+        <button id="darkModeToggle" style="margin-left:20px;padding:8px 16px;border-radius:8px;border:none;background:#fff;color:#222;cursor:pointer;font-weight:600;">🌙 Dark Mode</button>
+    </div>
+    <div class="container">
+        {% if messages %}
+            <div style="margin-bottom: 24px;">
+                {% for message in messages %}
+                    <div style="padding: 12px 18px; border-radius: 8px; margin-bottom: 10px; font-size: 1.1rem; background: {% if message.tags == 'success' %}#e6ffed{% elif message.tags == 'danger' %}#ffe6e6{% elif message.tags == 'warning' %}#fffbe6{% else %}#eaf1f8{% endif %}; color: #222; border-left: 6px solid {% if message.tags == 'success' %}#2ecc40{% elif message.tags == 'danger' %}#e74c3c{% elif message.tags == 'warning' %}#f1c40f{% else %}#3498db{% endif %};">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+    <div class="footer">
+        &copy; 2025 Bandy & Moot. All rights reserved.
+    </div>
+</body>
+<script>
+    const toggle = document.getElementById('darkModeToggle');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    function setDarkMode(on) {
+        document.body.classList.toggle('dark-mode', on);
+        localStorage.setItem('darkMode', on ? '1' : '0');
+        toggle.textContent = on ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+    if (toggle) {
+        toggle.onclick = () => setDarkMode(!document.body.classList.contains('dark-mode'));
+        const saved = localStorage.getItem('darkMode');
+        if (saved === '1' || (saved === null && prefersDark)) setDarkMode(true);
+    }
+</script>
+</html>

@@ -1,0 +1,149 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}KPO Dashboard{% endblock %}
+{% block extra_head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block content %}
+    <div class="summary-cards">
+        <div class="card">
+            <div class="card-title">Total Projects</div>
+            <div class="card-value">{{ projects|length }}</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Total Teams</div>
+            <div class="card-value">{{ teams|length }}</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Average KPI Value</div>
+            <div class="card-value">
+                {% if avg_kpi is not None %}
+                    {{ avg_kpi|floatformat:2 }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <h2>Analytics</h2>
+        <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+            <div style="flex:1; min-width:320px;">
+                <h3>Project Status Breakdown</h3>
+                <canvas id="projectStatusChart"></canvas>
+            </div>
+            <div style="flex:1; min-width:320px;">
+                <h3>KPI Value Distribution</h3>
+                <canvas id="kpiValueChart"></canvas>
+            </div>
+            <div style="flex:1; min-width:320px;">
+                <h3>KPI Trend (Line)</h3>
+                <canvas id="kpiTrendChart"></canvas>
+            </div>
+        </div>
+        <script>
+            // Project Status Chart
+            const projectStatusData = {
+                labels: [{% for project in projects %}'{{ project.status }}',{% endfor %}],
+                datasets: [{
+                    label: 'Projects',
+                    data: [{% for project in projects %}1,{% endfor %}],
+                    backgroundColor: [
+                        '#4f8cff', '#38e8fa', '#f6d365', '#fda085', '#2ecc40', '#e74c3c', '#f1c40f', '#9b59b6'
+                    ],
+                }]
+            };
+            // Group by status
+            const statusCounts = {};
+            projectStatusData.labels.forEach((status, i) => {
+                statusCounts[status] = (statusCounts[status] || 0) + 1;
+            });
+            projectStatusData.labels = Object.keys(statusCounts);
+            projectStatusData.datasets[0].data = Object.values(statusCounts);
+            new Chart(document.getElementById('projectStatusChart'), {
+                type: 'doughnut',
+                data: projectStatusData,
+                options: {responsive: true, plugins: {legend: {position: 'bottom'}}}
+            });
+            // KPI Value Chart
+            const kpiValueData = {
+                labels: [{% for kpi in kpis %}'{{ kpi.name }}',{% endfor %}],
+                datasets: [{
+                    label: 'KPI Value',
+                    data: [{% for kpi in kpis %}{{ kpi.value }},{% endfor %}],
+                    backgroundColor: '#4f8cff',
+                    borderColor: '#2c3e50',
+                    borderWidth: 1
+                }]
+            };
+            new Chart(document.getElementById('kpiValueChart'), {
+                type: 'bar',
+                data: kpiValueData,
+                options: {responsive: true, plugins: {legend: {display: false}}}
+            });
+            // KPI Trend Line Chart (assumes KPIs are ordered by creation or time)
+            const kpiTrendData = {
+                labels: [{% for kpi in kpis %}'{{ kpi.name }}',{% endfor %}],
+                datasets: [{
+                    label: 'KPI Value Trend',
+                    data: [{% for kpi in kpis %}{{ kpi.value }},{% endfor %}],
+                    fill: false,
+                    borderColor: '#38e8fa',
+                    tension: 0.2
+                }]
+            };
+            new Chart(document.getElementById('kpiTrendChart'), {
+                type: 'line',
+                data: kpiTrendData,
+                options: {responsive: true, plugins: {legend: {display: true}}}
+            });
+        </script>
+    </div>
+    <div class="section">
+        <h2>Projects</h2>
+        <table>
+            <tr><th>Name</th><th>Client</th><th>Status</th><th>Start Date</th><th>End Date</th></tr>
+            {% for project in projects %}
+            <tr>
+                <td>{{ project.name }}</td>
+                <td>{{ project.client }}</td>
+                <td>{{ project.status }}</td>
+                <td>{{ project.start_date }}</td>
+                <td>{{ project.end_date|default:'-' }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No projects found.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="section">
+        <h2>Teams</h2>
+        <table>
+            <tr><th>Name</th><th>Members</th><th>Project</th></tr>
+            {% for team in teams %}
+            <tr>
+                <td>{{ team.name }}</td>
+                <td>{{ team.members }}</td>
+                <td>{{ team.project.name }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3">No teams found.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="section">
+        <h2>KPIs</h2>
+        <table>
+            <tr><th>Project</th><th>KPI Name</th><th>Value</th><th>Target</th></tr>
+            {% for kpi in kpis %}
+            <tr>
+                <td>{{ kpi.project.name }}</td>
+                <td>{{ kpi.name }}</td>
+                <td>{{ kpi.value }}</td>
+                <td>{{ kpi.target }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No KPIs found.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

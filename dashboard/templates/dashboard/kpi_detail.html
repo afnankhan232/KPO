@@ -1,0 +1,11 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}KPI Details | KPO Dashboard{% endblock %}
+{% block content %}
+<h1>{{ kpi.name }}</h1>
+<ul>
+    <li><strong>Project:</strong> {{ kpi.project.name }}</li>
+    <li><strong>Value:</strong> {{ kpi.value }}</li>
+    <li><strong>Target:</strong> {{ kpi.target }}</li>
+</ul>
+<a href="/kpis/">&larr; Back to KPIs</a>
+{% endblock %}

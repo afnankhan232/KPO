@@ -1,0 +1,27 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}BPOs | KPO Dashboard{% endblock %}
+{% block content %}
+<h1>BPOs</h1>
+<a href="?export=csv" style="float:right; margin-bottom:10px;">Export to CSV</a>
+<form method="get" style="margin-bottom: 18px;">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search BPOs by name..." style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc;">
+    <button type="submit">Search</button>
+</form>
+<table>
+    <tr><th>Name</th><th>Description</th></tr>
+    {% for bpo in bpos %}
+    <tr>
+        <td><a href="/bpos/{{ bpo.id }}/">{{ bpo.name }}</a></td>
+        <td>{{ bpo.description|truncatewords:15 }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="2">No BPOs found.</td></tr>
+    {% endfor %}
+</table>
+<h2>Add BPO</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add BPO</button>
+</form>
+{% endblock %}

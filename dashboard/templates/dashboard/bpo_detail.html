@@ -1,0 +1,20 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}BPO Details | KPO Dashboard{% endblock %}
+{% block content %}
+<h1>{{ bpo.name }}</h1>
+<p>{{ bpo.description }}</p>
+<h2>Projects under this BPO</h2>
+<table>
+    <tr><th>Name</th><th>Client</th><th>Status</th></tr>
+    {% for project in projects %}
+    <tr>
+        <td><a href="/projects/{{ project.id }}/">{{ project.name }}</a></td>
+        <td>{{ project.client }}</td>
+        <td>{{ project.status }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">No projects found for this BPO.</td></tr>
+    {% endfor %}
+</table>
+<a href="/bpos/">&larr; Back to BPOs</a>
+{% endblock %}

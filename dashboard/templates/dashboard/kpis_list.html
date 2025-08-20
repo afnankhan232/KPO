@@ -1,0 +1,29 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}KPIs | KPO Dashboard{% endblock %}
+{% block content %}
+<h1>KPIs</h1>
+<a href="?export=csv" style="float:right; margin-bottom:10px;">Export to CSV</a>
+<form method="get" style="margin-bottom: 18px;">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search KPIs by name..." style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc;">
+    <button type="submit">Search</button>
+</form>
+<table>
+    <tr><th>Project</th><th>KPI Name</th><th>Value</th><th>Target</th></tr>
+    {% for kpi in kpis %}
+    <tr>
+        <td>{{ kpi.project.name }}</td>
+        <td><a href="/kpis/{{ kpi.id }}/">{{ kpi.name }}</a></td>
+        <td>{{ kpi.value }}</td>
+        <td>{{ kpi.target }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No KPIs found.</td></tr>
+    {% endfor %}
+</table>
+<h2>Add KPI</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add KPI</button>
+</form>
+{% endblock %}

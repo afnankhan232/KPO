@@ -1,0 +1,28 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Teams | KPO Dashboard{% endblock %}
+{% block content %}
+<h1>Teams</h1>
+<a href="?export=csv" style="float:right; margin-bottom:10px;">Export to CSV</a>
+<form method="get" style="margin-bottom: 18px;">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search Teams by name..." style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc;">
+    <button type="submit">Search</button>
+</form>
+<table>
+    <tr><th>Name</th><th>Members</th><th>Project</th></tr>
+    {% for team in teams %}
+    <tr>
+        <td><a href="/teams/{{ team.id }}/">{{ team.name }}</a></td>
+        <td>{{ team.members }}</td>
+        <td>{{ team.project.name }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">No teams found.</td></tr>
+    {% endfor %}
+</table>
+<h2>Add Team</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Team</button>
+</form>
+{% endblock %}

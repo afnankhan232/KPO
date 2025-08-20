@@ -1,0 +1,11 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Delete KPI | KPO Dashboard{% endblock %}
+{% block content %}
+<h1>Delete KPI</h1>
+<p>Are you sure you want to delete <strong>{{ kpi.name }}</strong>?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, Delete</button>
+    <a href="/kpis/">Cancel</a>
+</form>
+{% endblock %}
