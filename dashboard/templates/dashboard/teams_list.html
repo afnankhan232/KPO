@@ -4,10 +4,12 @@
 <style>
     body {
         font-family: Arial, sans-serif;
+        background: #f8f9fa;
+        color: #333;
     }
     h1, h2 {
         margin-bottom: 15px;
-        color: #333;
+        color: #222;
     }
     .top-bar {
         display: flex;
@@ -16,18 +18,20 @@
         margin-bottom: 15px;
     }
     .search-form input {
-        padding: 8px 12px;
-        border-radius: 5px;
+        padding: 10px 14px;
+        border-radius: 6px;
         border: 1px solid #ccc;
-        width: 220px;
+        width: 250px;
+        font-size: 14px;
     }
     .search-form button {
-        padding: 8px 14px;
+        padding: 10px 16px;
         border: none;
         background: #007bff;
         color: white;
-        border-radius: 5px;
+        border-radius: 6px;
         cursor: pointer;
+        font-size: 14px;
     }
     .search-form button:hover {
         background: #0056b3;
@@ -37,6 +41,7 @@
         border-collapse: collapse;
         margin-bottom: 20px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        background: #fff;
     }
     th, td {
         padding: 12px;
@@ -44,36 +49,49 @@
         text-align: left;
     }
     th {
-        background: #f4f6f8;
+        background: #f1f3f5;
         color: #333;
     }
     tr:hover {
         background: #f9f9f9;
     }
     a.export-btn {
-        padding: 8px 12px;
+        padding: 10px 14px;
         background: #28a745;
         color: white;
-        border-radius: 5px;
+        border-radius: 6px;
         text-decoration: none;
+        font-size: 14px;
     }
     a.export-btn:hover {
         background: #218838;
     }
     form.add-team {
-        padding: 15px;
+        padding: 20px;
         border: 1px solid #ddd;
         border-radius: 8px;
-        background: #fdfdfd;
-        box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+        background: #fff;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        max-width: 500px;
+    }
+    form.add-team input, 
+    form.add-team select, 
+    form.add-team textarea {
+        width: 100%;
+        padding: 10px 14px;
+        margin-bottom: 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 14px;
     }
     form.add-team button {
-        padding: 8px 14px;
+        padding: 10px 16px;
         background: #007bff;
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 6px;
         cursor: pointer;
+        font-size: 14px;
     }
     form.add-team button:hover {
         background: #0056b3;
