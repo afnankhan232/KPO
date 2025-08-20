@@ -1,9 +1,84 @@
 {% extends 'dashboard/base.html' %}
 {% block title %}KPO Dashboard{% endblock %}
+
 {% block extra_head %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
+        }
+        h2 {
+            margin-bottom: 15px;
+            border-left: 4px solid #4f8cff;
+            padding-left: 10px;
+            font-weight: 600;
+        }
+        .summary-cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .card {
+            flex: 1;
+            min-width: 220px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, background 0.3s, color 0.3s;
+            color: var(--card-text);
+        }
+        .card:hover { transform: translateY(-4px); }
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--card-title);
+            margin-bottom: 8px;
+        }
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--card-text);
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+            transition: background 0.3s, color 0.3s;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        table th, table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--table-border);
+            text-align: left;
+        }
+        table th {
+            background: var(--table-th-bg);
+            font-weight: 600;
+        }
+        table tr:hover td {
+            background: var(--table-hover);
+        }
+        canvas {
+            background: var(--chart-bg);
+            border-radius: 10px;
+            padding: 10px;
+        }
+    </style>
 {% endblock %}
+
 {% block content %}
+    <!-- Summary Cards -->
     <div class="summary-cards">
         <div class="card">
             <div class="card-title">Total Projects</div>
@@ -24,6 +99,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Analytics -->
     <div class="section">
         <h2>Analytics</h2>
         <div style="display: flex; gap: 40px; flex-wrap: wrap;">
@@ -36,11 +113,31 @@
                 <canvas id="kpiValueChart"></canvas>
             </div>
             <div style="flex:1; min-width:320px;">
-                <h3>KPI Trend (Line)</h3>
+                <h3>KPI Trend</h3>
                 <canvas id="kpiTrendChart"></canvas>
             </div>
         </div>
         <script>
+            // === THEME HELPERS ===
+            function getChartColors() {
+                const dark = document.body.classList.contains('dark-mode');
+                return {
+                    text: dark ? '#e0e0e0' : '#333',
+                    grid: dark ? '#444' : '#ddd',
+                };
+            }
+
+            function applyThemeToCharts() {
+                const colors = getChartColors();
+                Chart.defaults.color = colors.text;
+                Chart.defaults.borderColor = colors.grid;
+                Chart.helpers.each(Chart.instances, function(chart) {
+                    chart.update();
+                });
+            }
+
+            // === CHARTS ===
+
             // Project Status Chart
             const projectStatusData = {
                 labels: [{% for project in projects %}'{{ project.status }}',{% endfor %}],
@@ -48,56 +145,61 @@
                     label: 'Projects',
                     data: [{% for project in projects %}1,{% endfor %}],
                     backgroundColor: [
-                        '#4f8cff', '#38e8fa', '#f6d365', '#fda085', '#2ecc40', '#e74c3c', '#f1c40f', '#9b59b6'
-                    ],
+                        '#4f8cff','#38e8fa','#f6d365','#fda085',
+                        '#2ecc40','#e74c3c','#f1c40f','#9b59b6'
+                    ]
                 }]
             };
-            // Group by status
             const statusCounts = {};
-            projectStatusData.labels.forEach((status, i) => {
-                statusCounts[status] = (statusCounts[status] || 0) + 1;
+            projectStatusData.labels.forEach((s) => {
+                statusCounts[s] = (statusCounts[s] || 0) + 1;
             });
             projectStatusData.labels = Object.keys(statusCounts);
             projectStatusData.datasets[0].data = Object.values(statusCounts);
             new Chart(document.getElementById('projectStatusChart'), {
                 type: 'doughnut',
                 data: projectStatusData,
-                options: {responsive: true, plugins: {legend: {position: 'bottom'}}}
+                options: {responsive:true, plugins:{legend:{position:'bottom'}}}
             });
+
             // KPI Value Chart
-            const kpiValueData = {
-                labels: [{% for kpi in kpis %}'{{ kpi.name }}',{% endfor %}],
-                datasets: [{
-                    label: 'KPI Value',
-                    data: [{% for kpi in kpis %}{{ kpi.value }},{% endfor %}],
-                    backgroundColor: '#4f8cff',
-                    borderColor: '#2c3e50',
-                    borderWidth: 1
-                }]
-            };
             new Chart(document.getElementById('kpiValueChart'), {
                 type: 'bar',
-                data: kpiValueData,
-                options: {responsive: true, plugins: {legend: {display: false}}}
+                data: {
+                    labels: [{% for kpi in kpis %}'{{ kpi.name }}',{% endfor %}],
+                    datasets: [{
+                        label: 'KPI Value',
+                        data: [{% for kpi in kpis %}{{ kpi.value }},{% endfor %}],
+                        backgroundColor: '#4f8cff'
+                    }]
+                },
+                options: {responsive:true, plugins:{legend:{display:false}}}
             });
-            // KPI Trend Line Chart (assumes KPIs are ordered by creation or time)
-            const kpiTrendData = {
-                labels: [{% for kpi in kpis %}'{{ kpi.name }}',{% endfor %}],
-                datasets: [{
-                    label: 'KPI Value Trend',
-                    data: [{% for kpi in kpis %}{{ kpi.value }},{% endfor %}],
-                    fill: false,
-                    borderColor: '#38e8fa',
-                    tension: 0.2
-                }]
-            };
+
+            // KPI Trend Line Chart
             new Chart(document.getElementById('kpiTrendChart'), {
                 type: 'line',
-                data: kpiTrendData,
-                options: {responsive: true, plugins: {legend: {display: true}}}
+                data: {
+                    labels: [{% for kpi in kpis %}'{{ kpi.name }}',{% endfor %}],
+                    datasets: [{
+                        label: 'KPI Value Trend',
+                        data: [{% for kpi in kpis %}{{ kpi.value }},{% endfor %}],
+                        borderColor: '#38e8fa',
+                        tension: 0.3
+                    }]
+                },
+                options: {responsive:true, plugins:{legend:{display:true}}}
+            });
+
+            // === APPLY THEME TO CHARTS ===
+            applyThemeToCharts();
+            document.getElementById('darkModeToggle')?.addEventListener('click', () => {
+                setTimeout(applyThemeToCharts, 100);
             });
         </script>
     </div>
+
+    <!-- Projects -->
     <div class="section">
         <h2>Projects</h2>
         <table>
@@ -115,6 +217,8 @@
             {% endfor %}
         </table>
     </div>
+
+    <!-- Teams -->
     <div class="section">
         <h2>Teams</h2>
         <table>
@@ -130,6 +234,8 @@
             {% endfor %}
         </table>
     </div>
+
+    <!-- KPIs -->
     <div class="section">
         <h2>KPIs</h2>
         <table>
