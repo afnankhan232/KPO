@@ -1,10 +1,45 @@
 {% extends 'dashboard/base.html' %}
 {% block title %}Team Details | KPO Dashboard{% endblock %}
 {% block content %}
-<h1>{{ team.name }}</h1>
-<ul>
-    <li><strong>Members:</strong> {{ team.members }}</li>
-    <li><strong>Project:</strong> {{ team.project.name }}</li>
-</ul>
-<a href="/teams/">&larr; Back to Teams</a>
+<div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="margin-bottom: 20px; color: #2c3e50;">{{ team.name }}</h1>
+
+    <div style="background: #fff; padding: 20px; border-radius: 12px; 
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        
+        <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px; font-weight: bold; width: 30%;">👥 Members</td>
+                <td style="padding: 12px;">{{ team.members }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px; font-weight: bold;">📂 Project</td>
+                <td style="padding: 12px;">{{ team.project.name }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px; font-weight: bold;">👤 Team Lead</td>
+                <td style="padding: 12px;">{{ team.lead|default:"Not Assigned" }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px; font-weight: bold;">📝 Description</td>
+                <td style="padding: 12px;">{{ team.description|default:"No description available." }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px; font-weight: bold;">📅 Created On</td>
+                <td style="padding: 12px;">{{ team.created_at|date:"F j, Y" }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; font-weight: bold;">⏳ Last Updated</td>
+                <td style="padding: 12px;">{{ team.updated_at|date:"F j, Y, g:i a" }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <a href="/teams/" 
+       style="display: inline-block; margin-top: 20px; padding: 10px 18px; 
+              background: #007bff; color: white; border-radius: 8px; 
+              text-decoration: none; font-size: 14px;">
+        &larr; Back to Teams
+    </a>
+</div>
 {% endblock %}
