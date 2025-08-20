@@ -1,11 +1,28 @@
 {% extends 'dashboard/base.html' %}
 {% block title %}KPI Details | KPO Dashboard{% endblock %}
 {% block content %}
-<h1>{{ kpi.name }}</h1>
-<ul>
-    <li><strong>Project:</strong> {{ kpi.project.name }}</li>
-    <li><strong>Value:</strong> {{ kpi.value }}</li>
-    <li><strong>Target:</strong> {{ kpi.target }}</li>
-</ul>
-<a href="/kpis/">&larr; Back to KPIs</a>
+<div class="section" style="max-width: 700px; margin: 0 auto;">
+    <h1 style="margin-bottom: 20px; color: #2c3e50; font-size: 2rem; font-weight: 700; text-align: center;">
+        KPI Details
+    </h1>
+    <div class="card" style="background: #fff; padding: 28px 24px; border-radius: 16px; box-shadow: 0 4px 24px #0001;">
+        <h2 style="font-size: 1.4rem; color: #007bff; margin-bottom: 16px;">{{ kpi.name }}</h2>
+        <ul style="list-style: none; padding: 0; font-size: 1.1rem; color: #555;">
+            <li style="margin-bottom: 12px;">
+                <strong style="color:#2c3e50;">📌 Project:</strong> {{ kpi.project.name }}
+            </li>
+            <li style="margin-bottom: 12px;">
+                <strong style="color:#2c3e50;">📊 Current Value:</strong> {{ kpi.value }}
+            </li>
+            <li style="margin-bottom: 12px;">
+                <strong style="color:#2c3e50;">🎯 Target:</strong> {{ kpi.target }}
+            </li>
+        </ul>
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="/kpis/" style="display: inline-block; padding: 10px 20px; background: #007bff; color: #fff; border-radius: 8px; text-decoration: none; transition: 0.3s;">
+                ← Back to KPIs
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock %}
