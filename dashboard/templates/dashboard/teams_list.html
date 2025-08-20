@@ -1,12 +1,95 @@
 {% extends 'dashboard/base.html' %}
 {% block title %}Teams | KPO Dashboard{% endblock %}
 {% block content %}
-<h1>Teams</h1>
-<a href="?export=csv" style="float:right; margin-bottom:10px;">Export to CSV</a>
-<form method="get" style="margin-bottom: 18px;">
-    <input type="text" name="q" value="{{ query }}" placeholder="Search Teams by name..." style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc;">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1, h2 {
+        margin-bottom: 15px;
+        color: #333;
+    }
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .search-form input {
+        padding: 8px 12px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 220px;
+    }
+    .search-form button {
+        padding: 8px 14px;
+        border: none;
+        background: #007bff;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .search-form button:hover {
+        background: #0056b3;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    th {
+        background: #f4f6f8;
+        color: #333;
+    }
+    tr:hover {
+        background: #f9f9f9;
+    }
+    a.export-btn {
+        padding: 8px 12px;
+        background: #28a745;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    a.export-btn:hover {
+        background: #218838;
+    }
+    form.add-team {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fdfdfd;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    }
+    form.add-team button {
+        padding: 8px 14px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    form.add-team button:hover {
+        background: #0056b3;
+    }
+</style>
+
+<div class="top-bar">
+    <h1>Teams</h1>
+    <a href="?export=csv" class="export-btn">Export to CSV</a>
+</div>
+
+<form method="get" class="search-form">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search Teams by name...">
     <button type="submit">Search</button>
 </form>
+
 <table>
     <tr><th>Name</th><th>Members</th><th>Project</th></tr>
     {% for team in teams %}
@@ -19,8 +102,9 @@
     <tr><td colspan="3">No teams found.</td></tr>
     {% endfor %}
 </table>
+
 <h2>Add Team</h2>
-<form method="post">
+<form method="post" class="add-team">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Add Team</button>
