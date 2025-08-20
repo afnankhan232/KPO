@@ -1,26 +1,58 @@
 {% extends 'dashboard/base.html' %}
 {% block title %}About | KPO Dashboard{% endblock %}
 {% block content %}
-<div class="section" style="max-width: 700px; margin: 0 auto;">
-	<h1 style="margin-bottom: 20px; color: #2c3e50; font-size: 2rem; font-weight: 700;">About Bandy & Moot</h1>
-	<div class="card" style="background: #fff; padding: 28px 24px; border-radius: 16px; box-shadow: 0 4px 24px #0001;">
-		<h2 style="font-size: 1.3rem; color: #007bff; margin-bottom: 12px;">Our Mission</h2>
-		<p style="font-size: 1.1rem; color: #555; margin-bottom: 18px;">
-			Bandy & Moot is a leading provider of Knowledge Process Outsourcing (KPO) solutions, delivering excellence in project management, analytics, and business intelligence for clients worldwide. Our mission is to empower organizations with data-driven insights and efficient processes to achieve their business goals.
+<div class="section" style="max-width: 900px; margin: 0 auto; padding: 40px 20px;">
+	<h1 style="margin-bottom: 30px; color: #2c3e50; font-size: 2.5rem; font-weight: 700; text-align: center; animation: fadeInDown 1s;">
+		About Bandy & Moot
+	</h1>
+
+	<div class="card" style="background: linear-gradient(135deg, #ffffff, #f9fbff); padding: 32px 28px; border-radius: 18px; box-shadow: 0 6px 30px rgba(0,0,0,0.08); animation: fadeInUp 1.2s;">
+		
+		<!-- Mission -->
+		<h2 style="font-size: 1.5rem; color: #007bff; margin-bottom: 14px; animation: slideInLeft 1s;">Our Mission</h2>
+		<p style="font-size: 1.1rem; color: #555; margin-bottom: 24px; line-height: 1.7; animation: fadeIn 2s;">
+			Bandy & Moot is a leading provider of Knowledge Process Outsourcing (KPO) solutions, delivering excellence in project management, analytics, and business intelligence for clients worldwide. 
+			<br><br>
+			Our mission is to empower organizations with data-driven insights, efficient processes, and innovative strategies to help them achieve sustainable growth and success.
 		</p>
-		<h2 style="font-size: 1.3rem; color: #38e8fa; margin-bottom: 12px;">Our Team</h2>
-		<ul style="margin-bottom: 18px; color: #444; font-size: 1.05rem;">
-			<li><strong>Afnan Khan</strong> – Founder & CEO</li>
-			<li><strong>Sarah Lee</strong> – Head of Analytics</li>
-			<li><strong>Michael Smith</strong> – Lead Developer</li>
-			<li><strong>Priya Patel</strong> – Project Manager</li>
-		</ul>
-		<h2 style="font-size: 1.3rem; color: #2ecc40; margin-bottom: 12px;">Contact Us</h2>
-		<p style="font-size: 1.05rem; color: #555;">
-			Email: <a href="mailto:info@bandymoot.com" style="color:#007bff;">info@bandymoot.com</a><br>
-			Phone: <a href="tel:+1234567890" style="color:#007bff;">+1 (234) 567-890</a><br>
-			Address: 123 KPO Avenue, Suite 400, New York, NY, USA
+
+		<!-- Vision -->
+		<h2 style="font-size: 1.5rem; color: #38e8fa; margin-bottom: 14px; animation: slideInRight 1s;">Our Vision</h2>
+		<p style="font-size: 1.1rem; color: #555; margin-bottom: 24px; line-height: 1.7; animation: fadeIn 2.2s;">
+			We envision a future where businesses of all sizes can harness the power of data and technology to transform their operations, maximize efficiency, and create lasting impact in the global marketplace.
+		</p>
+
+		<!-- Contact -->
+		<h2 style="font-size: 1.5rem; color: #2ecc40; margin-bottom: 14px; animation: slideInLeft 1s;">Contact Us</h2>
+		<p style="font-size: 1.05rem; color: #555; line-height: 1.7; animation: fadeIn 2.5s;">
+			📧 Email: <a href="mailto:info@bandymoot.com" style="color:#007bff; text-decoration:none;">info@bandymoot.com</a><br>
+			📞 Phone: <a href="tel:+1234567890" style="color:#007bff; text-decoration:none;">+1 (234) 567-890</a><br>
+			🏢 Address: 123 KPO Avenue, Suite 400, New York, NY, USA
 		</p>
 	</div>
 </div>
+
+<!-- Motion Styles -->
+<style>
+@keyframes fadeInDown {
+	from { opacity: 0; transform: translateY(-20px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+	from { opacity: 0; transform: translateY(20px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+	from { opacity: 0; transform: translateX(-30px); }
+	to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+	from { opacity: 0; transform: translateX(30px); }
+	to { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+</style>
 {% endblock %}
