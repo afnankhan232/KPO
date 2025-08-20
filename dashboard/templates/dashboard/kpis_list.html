@@ -1,14 +1,222 @@
 {% extends 'dashboard/base.html' %}
 {% block title %}KPIs | KPO Dashboard{% endblock %}
+
 {% block content %}
+<style>
+    /* Headings */
+    h1, h2 {
+        margin-bottom: 15px;
+        color: #1e2a38;
+    }
+    body.dark-mode h1,
+    body.dark-mode h2 {
+        color: #00c8ff;
+    }
+
+    /* Links */
+    a {
+        color: #007bff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    body.dark-mode a {
+        color: #00c8ff;
+    }
+
+    /* Export Button */
+    .export-btn {
+        float: right;
+        padding: 8px 14px;
+        background: #28a745;
+        color: white;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: background 0.3s ease;
+    }
+    .export-btn:hover {
+        background: #218838;
+    }
+
+    /* Search Form */
+    .search-form {
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .search-form input[type="text"] {
+        padding: 10px 14px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        background: #fff;
+        color: #222;
+        width: 280px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+    .search-form input[type="text"]:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0px 0px 6px #007bff40;
+    }
+    .search-form button {
+        padding: 10px 18px;
+        border: none;
+        background: #007bff;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: background 0.3s ease;
+    }
+    .search-form button:hover {
+        background: #0056b3;
+    }
+    body.dark-mode .search-form input[type="text"] {
+        background: #2c2c3c;
+        border: 1px solid #444;
+        color: #fff;
+    }
+    body.dark-mode .search-form input[type="text"]:focus {
+        border-color: #00c8ff;
+        box-shadow: 0px 0px 6px #00c8ff80;
+    }
+
+    /* Table Styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        font-size: 0.95rem;
+    }
+    th, td {
+        padding: 14px 16px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    th {
+        background: #f5f7fb;
+        color: #222;
+        font-weight: 600;
+    }
+    tr:hover {
+        background: #f1f5ff;
+    }
+    body.dark-mode table {
+        background: #232526;
+        color: #e0e0e0;
+    }
+    body.dark-mode th {
+        background: #333;
+        color: #00c8ff;
+    }
+    body.dark-mode td {
+        border-bottom: 1px solid #444;
+    }
+    body.dark-mode tr:hover {
+        background: #3a3a55;
+    }
+
+    /* KPI Form Styling */
+    .kpi-form {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 28px;
+        border-radius: 12px;
+        max-width: 600px;
+        margin-top: 25px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .kpi-form label {
+        display: block;
+        margin-bottom: 6px;
+        color: #333;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+    .kpi-form input, 
+    .kpi-form select, 
+    .kpi-form textarea {
+        width: 98%;
+        padding: 12px 14px;
+        margin-bottom: 16px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background: #fff;
+        color: #222;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+    .kpi-form input:focus,
+    .kpi-form select:focus,
+    .kpi-form textarea:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 6px #007bff40;
+        outline: none;
+    }
+    .kpi-form button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #00c8ff, #007bff);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .kpi-form button:hover {
+        background: linear-gradient(135deg, #009bd1, #0056b3);
+    }
+    body.dark-mode .kpi-form {
+        background: #2a2a3b;
+        border: 1px solid #444;
+        color: #e0e0e0;
+    }
+    body.dark-mode .kpi-form label {
+        color: #ccc;
+    }
+    body.dark-mode .kpi-form input,
+    body.dark-mode .kpi-form select,
+    body.dark-mode .kpi-form textarea {
+        background: #1e1e2f;
+        border: 1px solid #555;
+        color: #fff;
+    }
+    body.dark-mode .kpi-form input:focus,
+    body.dark-mode .kpi-form select:focus,
+    body.dark-mode .kpi-form textarea:focus {
+        border-color: #00c8ff;
+        box-shadow: 0 0 6px #00c8ff80;
+    }
+</style>
+
 <h1>KPIs</h1>
-<a href="?export=csv" style="float:right; margin-bottom:10px;">Export to CSV</a>
-<form method="get" style="margin-bottom: 18px;">
-    <input type="text" name="q" value="{{ query }}" placeholder="Search KPIs by name..." style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc;">
+<a href="?export=csv" class="export-btn">Export to CSV</a>
+
+<form method="get" class="search-form">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search KPIs by name...">
     <button type="submit">Search</button>
 </form>
+
 <table>
-    <tr><th>Project</th><th>KPI Name</th><th>Value</th><th>Target</th></tr>
+    <tr>
+        <th>Project</th>
+        <th>KPI Name</th>
+        <th>Value</th>
+        <th>Target</th>
+    </tr>
     {% for kpi in kpis %}
     <tr>
         <td>{{ kpi.project.name }}</td>
@@ -20,8 +228,9 @@
     <tr><td colspan="4">No KPIs found.</td></tr>
     {% endfor %}
 </table>
+
 <h2>Add KPI</h2>
-<form method="post">
+<form method="post" class="kpi-form">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Add KPI</button>
